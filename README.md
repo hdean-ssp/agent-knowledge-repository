@@ -20,6 +20,9 @@ That's it. All dependencies (sqlite-vec, fastembed) are pulled in automatically 
 ## Why AKR?
 
 Working in large, legacy codebases means hard-won knowledge gets lost between sessions. AKR solves this by giving every agent on your team a shared knowledge base they can read from and write to automatically — no manual wiki maintenance required.
+<img width="465" height="408" alt="with-akr" src="https://github.com/user-attachments/assets/1c2b2e09-ef52-4dc0-8820-7ae48f8d3dea" />
+<img width="448" height="293" alt="without-akr" src="https://github.com/user-attachments/assets/f82a4a03-4369-4d6d-8c1b-e8a17f4030c7" />
+
 
 - **Living wiki** — Knowledge grows organically as agents work. Bug fix patterns, architectural decisions, dependency gotchas — all captured and searchable.
 - **Semantic search** — Find relevant knowledge by meaning, not just keywords. Powered by vector embeddings and cosine similarity.
