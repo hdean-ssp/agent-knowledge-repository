@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "akr"
+version = "0.1.0"
+description = "Agent Knowledge Repository — a local vector-searchable knowledge store for AI agents"
+requires-python = ">=3.9"
+dependencies = [
+    "sqlite-vec",
+    "fastembed",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "hypothesis",
+]
+
+[project.scripts]
+akr-commit = "akr.cli:akr_commit"
+akr-fetch = "akr.cli:akr_fetch"
+akr-update = "akr.cli:akr_update"
+akr-delete = "akr.cli:akr_delete"
+akr-list = "akr.cli:akr_list"
