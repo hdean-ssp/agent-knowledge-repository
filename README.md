@@ -17,6 +17,18 @@ That's it. All dependencies (sqlite-vec, fastembed) are pulled in automatically 
 
 **Requirements:** Python 3.9+ (ships natively on RHEL 9)
 
+### PATH setup
+
+If `akr-list` returns "command not found", pip installed the scripts to `~/.local/bin/` which isn't on your PATH. Add it:
+
+```bash
+# Add to ~/.bashrc (interactive shells) or ~/.bash_profile (login shells)
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+On RHEL 9 / CentOS / Fedora, `~/.bashrc` is the right file. On macOS or if you use a login shell, use `~/.bash_profile` instead. For zsh users, add to `~/.zshrc`.
+
 ### Set up agent integration
 
 After installing, copy the steering file and hook into your target project's `.kiro/` directory:
