@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "AKR Knowledge Reminder",
+  "description": "Reminds the agent about the AKR knowledge repository on every prompt, triggering a fetch for relevant prior knowledge before responding.",
+  "version": "1",
+  "when": {
+    "type": "promptSubmit"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "You have access to the Agent Knowledge Repository (AKR) — a shared knowledge base for persisting and retrieving learnings across interactions. Before responding, run `akr-fetch --query \"<brief summary of the user's request>\"` to check for relevant prior knowledge. If you discover something worth remembering during this interaction (bug fix patterns, architectural decisions, code patterns, dependency insights), commit it with `akr-commit`. See .kiro/steering/agent-knowledge.md for full usage rules and command reference."
+  }
+}
