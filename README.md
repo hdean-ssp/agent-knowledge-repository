@@ -17,6 +17,23 @@ That's it. All dependencies (sqlite-vec, fastembed) are pulled in automatically 
 
 **Requirements:** Python 3.9+ (ships natively on RHEL 9)
 
+### Set up agent integration
+
+After installing, copy the steering file and hook into your target project's `.kiro/` directory:
+
+```bash
+# From your target project root:
+mkdir -p .kiro/steering .kiro/hooks
+
+# Copy the steering file (auto-loaded into agent context)
+cp /path/to/agent-knowledge-repository/.kiro/steering/agent-knowledge.md .kiro/steering/
+
+# Copy the prompt hook (ensures the agent always knows about AKR)
+cp /path/to/agent-knowledge-repository/.kiro/hooks/akr-prompt-reminder.kiro.hook .kiro/hooks/
+```
+
+The hook fires on every prompt submission, reminding the agent to `akr-fetch` before responding and `akr-commit` when it learns something. This is the most reliable way to ensure AKR is used — it works even when the steering file isn't auto-loaded by the IDE.
+
 ## Why AKR?
 
 Working in large, legacy codebases means hard-won knowledge gets lost between sessions. AKR solves this by giving every agent on your team a shared knowledge base they can read from and write to automatically — no manual wiki maintenance required.
@@ -145,16 +162,22 @@ akr-list --since 2024-01-01
 akr-list --limit 10 --offset 20
 ```
 
-## Agent Integration (Steering Files)
+## Agent Integration
 
-AKR ships with a steering file at `.kiro/steering/agent-knowledge.md` that automatically instructs agents to:
+AKR uses two mechanisms to ensure agents automatically use the knowledge repository:
 
-1. **Fetch** relevant knowledge at the start of each interaction
-2. **Commit** significant learnings (bug fixes, architecture decisions, patterns)
-3. **Update** existing knowledge when new info supersedes old
-4. **Check for duplicates** before committing
+### 1. Steering file (`.kiro/steering/agent-knowledge.md`)
 
-The steering file uses `inclusion: auto` so it's loaded into agent context automatically.
+Loaded into agent context via `inclusion: auto`. Contains rules for when to fetch, commit, and update knowledge, plus tagging guidelines and the full command reference.
+
+### 2. Prompt hook (`.kiro/hooks/akr-prompt-reminder.kiro.hook`)
+
+Fires on every prompt submission, injecting a reminder that tells the agent to:
+- `akr-fetch` relevant knowledge before responding
+- `akr-commit` significant learnings during the interaction
+- Reference the steering file for full usage rules
+
+The hook is the more reliable mechanism — it works even in new sessions where the steering file might not be auto-loaded. Both should be copied into your target project's `.kiro/` directory (see Installation above).
 
 ## Repository Modes
 
