@@ -27,7 +27,7 @@ class TestDefaults:
     def test_default_similarity_threshold(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.chdir(tmp_path)
         cfg = load_config()
-        assert cfg.similarity_threshold == pytest.approx(0.3)
+        assert cfg.similarity_threshold == pytest.approx(1.0)
 
     def test_default_embedding_model(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.chdir(tmp_path)
@@ -69,7 +69,7 @@ class TestFileLoading:
         assert cfg.repo_mode == "both"
         # Everything else should be defaults
         assert cfg.default_top_n == 5
-        assert cfg.similarity_threshold == pytest.approx(0.3)
+        assert cfg.similarity_threshold == pytest.approx(1.0)
         assert cfg.embedding_model == "BAAI/bge-small-en-v1.5"
         assert cfg.shared_repo_path == "/var/lib/agent-knowledge-repo/"
         assert cfg.user_repo_path == "~/.kiro/knowledge/"

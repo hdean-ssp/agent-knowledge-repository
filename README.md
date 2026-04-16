@@ -50,7 +50,7 @@ Create `.kiro/knowledge-config.json` in your project root or home directory:
   "shared_repo_path": "/var/lib/agent-knowledge-repo/",
   "embedding_model": "BAAI/bge-small-en-v1.5",
   "default_top_n": 5,
-  "similarity_threshold": 0.3
+  "similarity_threshold": 1.0
 }
 ```
 

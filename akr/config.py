@@ -22,7 +22,7 @@ _DEFAULTS: Dict[str, Any] = {
     "user_repo_path": "~/.kiro/knowledge/",
     "embedding_model": "BAAI/bge-small-en-v1.5",
     "default_top_n": 5,
-    "similarity_threshold": 0.3,
+    "similarity_threshold": 1.0,
 }
 
 
