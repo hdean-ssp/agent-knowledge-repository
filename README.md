@@ -54,23 +54,10 @@ Working in large, legacy codebases means hard-won knowledge gets lost between se
 
 By leveraging stored knowledge, agents spend fewer tokens re-discovering context — resulting in measurably lower credit usage per interaction.
 
-<table>
-<tr>
-<th></th>
-<th align="center">Without AKR</th>
-<th align="center">With AKR</th>
-</tr>
-<tr>
-<td><strong>Credits</strong></td>
-<td align="center"><img width="400" alt="without-akr-credits" src="https://github.com/user-attachments/assets/5b27ff5f-5a25-44c3-8baa-41d940b6db23" /></td>
-<td align="center"><img width="400" alt="with-akr-credits" src="https://github.com/user-attachments/assets/449f4794-3db8-4d6e-8228-97b984c19e8b" /></td>
-</tr>
-<tr>
-<td><strong>Prompt</strong></td>
-<td align="center"><img width="400" alt="without-akr-prompt" src="https://github.com/user-attachments/assets/d54c80f3-dea1-4a33-9301-7e82a75d0947" /></td>
-<td align="center"><img width="400" alt="with-akr-prompt" src="https://github.com/user-attachments/assets/77af8e52-9e23-40bb-9db6-ce001d530222" /></td>
-</tr>
-</table>
+| | Without AKR | With AKR |
+|---|---|---|
+| **Credits** | <img width="400" alt="without-akr-credits" src="https://github.com/user-attachments/assets/5b27ff5f-5a25-44c3-8baa-41d940b6db23" /> | <img width="400" alt="with-akr-credits" src="https://github.com/user-attachments/assets/449f4794-3db8-4d6e-8228-97b984c19e8b" /> |
+| **Prompt** | <img width="400" alt="without-akr-prompt" src="https://github.com/user-attachments/assets/d54c80f3-dea1-4a33-9301-7e82a75d0947" /> | <img width="400" alt="with-akr-prompt" src="https://github.com/user-attachments/assets/77af8e52-9e23-40bb-9db6-ce001d530222" /> |
 
 - **Living wiki** — Knowledge grows organically as agents work. Bug fix patterns, architectural decisions, dependency gotchas — all captured and searchable.
 - **Semantic search** — Find relevant knowledge by meaning, not just keywords. Powered by vector embeddings and cosine similarity.
@@ -99,7 +86,6 @@ Create `.kiro/knowledge-config.json` in your project root or home directory:
 {
   "repo_mode": "user",
   "shared_repo_path": "/var/lib/agent-knowledge-repo/",
-  "embedding_model": "BAAI/bge-small-en-v1.5",
   "default_top_n": 5,
   "similarity_threshold": 1.0
 }
@@ -138,6 +124,23 @@ Options:
 - `--top-n 10` — number of results (default: 5)
 - `--threshold 0.5` — similarity threshold (default: 0.3, lower = stricter)
 - `--repo shared|user|both` — which repository to search
+- `--format json|text|brief` — output format (default: json)
+
+Format examples:
+
+```bash
+# Brief: one line per result
+akr-fetch --query "database writes" --format brief
+# [a1b2c3d4-...] SQLite WAL mode (score: 0.1200)
+
+# Text: human-readable multi-line
+akr-fetch --query "database writes" --format text
+# Title: SQLite WAL mode
+# Tags: database, performance
+# Source: akr/repository.py
+# Score: 0.1200
+# Content: Enable WAL mode with PRAGMA journal_mode=WAL...
+```
 
 ### Update knowledge
 
@@ -172,7 +175,68 @@ akr-list --since 2024-01-01
 
 # Pagination
 akr-list --limit 10 --offset 20
+
+# Brief: one line per artifact
+akr-list --format brief
+# [a1b2c3d4-...] SQLite WAL mode (2024-06-15T12:00:00+00:00)
+
+# Text: human-readable multi-line
+akr-list --format text
+# Title: SQLite WAL mode
+# Tags: database, performance
+# Source: akr/repository.py
+# Content: Enable WAL mode with PRAGMA journal_mode=WAL...
 ```
+
+### Export knowledge
+
+```bash
+# Export all artifacts to a JSON file
+akr-export --output backup.json
+
+# Export from a specific repository
+akr-export --output shared-backup.json --repo shared
+```
+
+Output: `{"status": "exported", "count": 42, "path": "backup.json"}`
+
+The exported file contains a JSON array of all artifacts (without embeddings — they are regenerated on import).
+
+### Import knowledge
+
+```bash
+# Import artifacts from a JSON file (skip existing by default)
+akr-import --input backup.json
+
+# Import with update strategy (overwrite if imported version is newer)
+akr-import --input backup.json --strategy update
+
+# Import into a specific repository
+akr-import --input backup.json --repo shared
+```
+
+Output: `{"status": "imported", "imported": 10, "skipped": 2, "updated": 0}`
+
+Strategies:
+- `skip` (default) — skip artifacts whose ID already exists in the target repo
+- `update` — overwrite existing artifacts if the imported version has a newer `updated_at`
+
+### Audit trail
+
+```bash
+# View version history for an artifact
+akr-audit --id a1b2c3d4-...
+```
+
+Output: JSON array of previous versions with timestamps, newest first.
+
+### Repository stats
+
+```bash
+akr-stats
+```
+
+Output: `{"artifact_count": 42, "db_size_bytes": 524288, "last_updated": "2024-06-15T12:00:00+00:00", "tags": {"bug-fix": 12, "pattern": 8}, "repo_mode": "user"}`
 
 ## Agent Integration
 
@@ -211,7 +275,6 @@ Every artifact follows a consistent structure:
   "source_context": "path/to/file.py:ClassName.method",
   "metadata": {"optional": "key-value pairs"}
 }
-
 ```
 
 Fields `id`, `created_at`, and `updated_at` are auto-generated.

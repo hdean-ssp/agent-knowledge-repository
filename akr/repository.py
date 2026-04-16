@@ -303,6 +303,60 @@ class ArtifactRepository:
         )
         self._conn.commit()
 
+    def get_audit_trail(self, artifact_id: str) -> List[Dict]:
+        """Query audit trail records for an artifact, newest first.
+
+        Returns a list of dicts:
+        ``[{"artifact_id": "...", "previous_content": {...}, "changed_at": "..."}]``
+        """
+        rows = self._conn.execute(
+            "SELECT artifact_id, previous_content, changed_at "
+            "FROM audit_trail WHERE artifact_id = ? ORDER BY changed_at DESC",
+            (artifact_id,),
+        ).fetchall()
+        results: List[Dict] = []
+        for aid, prev_json, changed_at in rows:
+            results.append({
+                "artifact_id": aid,
+                "previous_content": json.loads(prev_json),
+                "changed_at": changed_at,
+            })
+        return results
+
+    # ------------------------------------------------------------------
+    # Stats
+    # ------------------------------------------------------------------
+
+    def get_stats(self) -> dict:
+        """Return repository statistics.
+
+        Returns a dict with:
+        - ``artifact_count``: total number of artifacts
+        - ``last_updated``: most recent ``updated_at`` value (or ``None``)
+        - ``tags``: dict mapping tag values to their occurrence count,
+          ordered by count descending
+        """
+        count = self._conn.execute(
+            "SELECT COUNT(*) FROM artifacts"
+        ).fetchone()[0]
+
+        last_updated = self._conn.execute(
+            "SELECT MAX(updated_at) FROM artifacts"
+        ).fetchone()[0]
+
+        tag_rows = self._conn.execute(
+            "SELECT value, COUNT(*) as cnt "
+            "FROM artifacts, json_each(artifacts.tags) "
+            "GROUP BY value ORDER BY cnt DESC"
+        ).fetchall()
+        tags = {row[0]: row[1] for row in tag_rows}
+
+        return {
+            "artifact_count": count,
+            "last_updated": last_updated,
+            "tags": tags,
+        }
+
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------

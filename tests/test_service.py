@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import os
 import struct
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -31,7 +31,6 @@ def _make_service(tmp_path) -> KnowledgeService:
         repo_mode="user",
         shared_repo_path=str(tmp_path / "shared"),
         user_repo_path=str(tmp_path / "user"),
-        embedding_model="fake",
         default_top_n=5,
         similarity_threshold=2.0,
     )
@@ -48,7 +47,7 @@ def _make_service(tmp_path) -> KnowledgeService:
 
     engine.embed = _embed
     engine.dimensions = DIMS
-    svc.embedding_engine = engine
+    svc._embedding_engine = engine
     svc.lock_manager = FileLockManager()
     svc._repositories = {}
 
@@ -92,3 +91,36 @@ class TestServiceErrorHandling:
         svc = _make_service(tmp_path)
         results = svc.fetch("anything", top_n=5, threshold=2.0)
         assert results == []
+
+
+class TestLazyModelLoading:
+    """Verify list and delete operations don't trigger embedding model loading."""
+
+    def test_list_artifacts_does_not_load_model(self, tmp_path):
+        """list_artifacts() should never instantiate EmbeddingEngine."""
+        config = AKRConfig(
+            repo_mode="user",
+            shared_repo_path=str(tmp_path / "shared"),
+            user_repo_path=str(tmp_path / "user"),
+            default_top_n=5,
+            similarity_threshold=2.0,
+        )
+        with patch("akr.service.EmbeddingEngine") as MockEngine:
+            svc = KnowledgeService(config)
+            svc.list_artifacts()
+            MockEngine.assert_not_called()
+
+    def test_delete_does_not_load_model(self, tmp_path):
+        """delete() should never instantiate EmbeddingEngine."""
+        config = AKRConfig(
+            repo_mode="user",
+            shared_repo_path=str(tmp_path / "shared"),
+            user_repo_path=str(tmp_path / "user"),
+            default_top_n=5,
+            similarity_threshold=2.0,
+        )
+        with patch("akr.service.EmbeddingEngine") as MockEngine:
+            svc = KnowledgeService(config)
+            with pytest.raises(ArtifactNotFoundError):
+                svc.delete("nonexistent-id")
+            MockEngine.assert_not_called()

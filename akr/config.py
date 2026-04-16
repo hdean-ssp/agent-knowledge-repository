@@ -20,7 +20,6 @@ _DEFAULTS: Dict[str, Any] = {
     "repo_mode": "user",
     "shared_repo_path": "/var/lib/agent-knowledge-repo/",
     "user_repo_path": "~/.kiro/knowledge/",
-    "embedding_model": "BAAI/bge-small-en-v1.5",
     "default_top_n": 5,
     "similarity_threshold": 1.0,
 }
@@ -33,7 +32,6 @@ class AKRConfig:
     repo_mode: str
     shared_repo_path: str
     user_repo_path: str
-    embedding_model: str
     default_top_n: int
     similarity_threshold: float
 
@@ -60,11 +58,6 @@ def validate_config(raw: Dict[str, Any]) -> List[Dict[str, str]]:
     if "user_repo_path" in raw:
         if not isinstance(raw["user_repo_path"], str):
             errors.append({"field": "user_repo_path", "message": "'user_repo_path' must be a string"})
-
-    # embedding_model
-    if "embedding_model" in raw:
-        if not isinstance(raw["embedding_model"], str):
-            errors.append({"field": "embedding_model", "message": "'embedding_model' must be a string"})
 
     # default_top_n
     if "default_top_n" in raw:
@@ -118,7 +111,6 @@ def load_config() -> AKRConfig:
         repo_mode=raw.get("repo_mode", _DEFAULTS["repo_mode"]),
         shared_repo_path=raw.get("shared_repo_path", _DEFAULTS["shared_repo_path"]),
         user_repo_path=raw.get("user_repo_path", _DEFAULTS["user_repo_path"]),
-        embedding_model=raw.get("embedding_model", _DEFAULTS["embedding_model"]),
         default_top_n=raw.get("default_top_n", _DEFAULTS["default_top_n"]),
         similarity_threshold=raw.get("similarity_threshold", _DEFAULTS["similarity_threshold"]),
     )

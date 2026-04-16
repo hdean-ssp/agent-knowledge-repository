@@ -29,11 +29,6 @@ class TestDefaults:
         cfg = load_config()
         assert cfg.similarity_threshold == pytest.approx(1.0)
 
-    def test_default_embedding_model(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.chdir(tmp_path)
-        cfg = load_config()
-        assert cfg.embedding_model == "BAAI/bge-small-en-v1.5"
-
 
 class TestFileLoading:
     """Config file is loaded and values are applied correctly."""
@@ -47,7 +42,6 @@ class TestFileLoading:
             "shared_repo_path": "/custom/path/",
             "default_top_n": 10,
             "similarity_threshold": 0.5,
-            "embedding_model": "custom-model",
         }))
         monkeypatch.chdir(tmp_path)
 
@@ -56,7 +50,6 @@ class TestFileLoading:
         assert cfg.shared_repo_path == "/custom/path/"
         assert cfg.default_top_n == 10
         assert cfg.similarity_threshold == pytest.approx(0.5)
-        assert cfg.embedding_model == "custom-model"
 
     def test_partial_config_uses_defaults(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         config_dir = tmp_path / ".kiro"
@@ -70,7 +63,6 @@ class TestFileLoading:
         # Everything else should be defaults
         assert cfg.default_top_n == 5
         assert cfg.similarity_threshold == pytest.approx(1.0)
-        assert cfg.embedding_model == "BAAI/bge-small-en-v1.5"
         assert cfg.shared_repo_path == "/var/lib/agent-knowledge-repo/"
         assert cfg.user_repo_path == "~/.kiro/knowledge/"
 

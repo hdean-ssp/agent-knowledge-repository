@@ -10,37 +10,34 @@ from typing import List
 
 from akr.errors import EmbeddingModelError
 
+MODEL_NAME = "BAAI/bge-small-en-v1.5"
+EMBEDDING_DIM = 384
+
 
 class EmbeddingEngine:
     """Generates embeddings using fastembed's TextEmbedding model."""
 
-    def __init__(self, model_name: str = "BAAI/bge-small-en-v1.5") -> None:
+    def __init__(self) -> None:
         """Initialize the fastembed TextEmbedding model.
 
-        Parameters
-        ----------
-        model_name:
-            Name of the fastembed model to load.
+        Uses the hardcoded model ``BAAI/bge-small-en-v1.5`` (384 dimensions).
 
         Raises
         ------
         EmbeddingModelError
-            If the model cannot be loaded (e.g. fastembed not installed or
-            invalid model name).
+            If the model cannot be loaded (e.g. fastembed not installed).
         """
         try:
             from fastembed import TextEmbedding  # type: ignore[import-untyped]
 
-            self._model = TextEmbedding(model_name=model_name)
+            self._model = TextEmbedding(model_name=MODEL_NAME)
         except Exception as exc:
             raise EmbeddingModelError(
-                model_name=model_name,
+                model_name=MODEL_NAME,
                 suggestion="Try: pip install fastembed",
             ) from exc
 
-        # Determine dimension count by embedding a tiny probe string.
-        probe = list(self._model.embed(["hello"]))
-        self._dimensions: int = len(probe[0])
+        self._dimensions: int = EMBEDDING_DIM
 
     def embed(self, text: str) -> bytes:
         """Generate an embedding for *text*.

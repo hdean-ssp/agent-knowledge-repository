@@ -61,7 +61,6 @@ def _make_config(tmp_path, repo_mode: str = "user") -> AKRConfig:
         repo_mode=repo_mode,
         shared_repo_path=shared_path,
         user_repo_path=user_path,
-        embedding_model="fake-model",
         default_top_n=5,
         similarity_threshold=2.0,  # permissive for testing
     )
@@ -74,7 +73,7 @@ def _make_service(tmp_path, repo_mode: str = "user") -> KnowledgeService:
     svc = object.__new__(KnowledgeService)
     svc.config = config
     svc.validator = __import__("akr.schema", fromlist=["SchemaValidator"]).SchemaValidator()
-    svc.embedding_engine = _make_fake_engine()
+    svc._embedding_engine = _make_fake_engine()
     svc.lock_manager = __import__("akr.locking", fromlist=["FileLockManager"]).FileLockManager()
     svc._repositories = {}
 

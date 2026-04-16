@@ -73,3 +73,15 @@ class TestSteeringTaggingGuidance:
         assert tag in steering_content, (
             f"Steering file must reference tag category '{tag}'"
         )
+
+
+class TestSteeringDeleteGuidance:
+    def test_contains_delete_section(self, steering_content: str):
+        assert "When to Delete" in steering_content, (
+            "Steering file must contain 'When to Delete Knowledge' section"
+        )
+
+    def test_references_akr_delete_in_guidance(self, steering_content: str):
+        assert "akr-delete" in steering_content, (
+            "Steering file must reference akr-delete command in guidance"
+        )
