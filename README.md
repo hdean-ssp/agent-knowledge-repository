@@ -21,13 +21,27 @@ That's it. All dependencies (sqlite-vec, fastembed) are pulled in automatically 
 
 Working in large, legacy codebases means hard-won knowledge gets lost between sessions. AKR solves this by giving every agent on your team a shared knowledge base they can read from and write to automatically — no manual wiki maintenance required.
 
+## Credit Usage: With vs Without AKR
 
-<img width="150" height="24" alt="without-akr-credits" src="https://github.com/user-attachments/assets/5b27ff5f-5a25-44c3-8baa-41d940b6db23" />
-<img width="157" height="132" alt="without-akr-prompt" src="https://github.com/user-attachments/assets/d54c80f3-dea1-4a33-9301-7e82a75d0947" />
-<img width="144" height="29" alt="with-akr-credits" src="https://github.com/user-attachments/assets/449f4794-3db8-4d6e-8228-97b984c19e8b" />
-<img width="159" height="134" alt="with-akr-prompt" src="https://github.com/user-attachments/assets/77af8e52-9e23-40bb-9db6-ce001d530222" />
+By leveraging stored knowledge, agents spend fewer tokens re-discovering context — resulting in measurably lower credit usage per interaction.
 
-
+<table>
+<tr>
+<th></th>
+<th align="center">Without AKR</th>
+<th align="center">With AKR</th>
+</tr>
+<tr>
+<td><strong>Credits</strong></td>
+<td align="center"><img width="400" alt="without-akr-credits" src="https://github.com/user-attachments/assets/5b27ff5f-5a25-44c3-8baa-41d940b6db23" /></td>
+<td align="center"><img width="400" alt="with-akr-credits" src="https://github.com/user-attachments/assets/449f4794-3db8-4d6e-8228-97b984c19e8b" /></td>
+</tr>
+<tr>
+<td><strong>Prompt</strong></td>
+<td align="center"><img width="400" alt="without-akr-prompt" src="https://github.com/user-attachments/assets/d54c80f3-dea1-4a33-9301-7e82a75d0947" /></td>
+<td align="center"><img width="400" alt="with-akr-prompt" src="https://github.com/user-attachments/assets/77af8e52-9e23-40bb-9db6-ce001d530222" /></td>
+</tr>
+</table>
 
 - **Living wiki** — Knowledge grows organically as agents work. Bug fix patterns, architectural decisions, dependency gotchas — all captured and searchable.
 - **Semantic search** — Find relevant knowledge by meaning, not just keywords. Powered by vector embeddings and cosine similarity.
