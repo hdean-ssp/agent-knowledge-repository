@@ -46,9 +46,24 @@ Always include source context in every committed artifact:
 
 ## Command Reference
 ```
-akr-fetch --query "..." [--top-n N] [--threshold T] [--repo MODE]
+akr-fetch --query "..." [--top-n N] [--threshold T] [--repo MODE] [--format json|text|brief]
 akr-commit --json '{"title": "...", "content": "...", "tags": [...], "source_context": "..."}' [--repo MODE] [--check-duplicates] [--force]
 akr-update --id <uuid> --json '{"title": "...", "content": "...", "tags": [...], "source_context": "..."}' [--repo MODE]
 akr-delete --id <uuid> [--repo MODE]
-akr-list [--tags tag1,tag2] [--since YYYY-MM-DD] [--limit N] [--repo MODE]
+akr-list [--tags tag1,tag2] [--since YYYY-MM-DD] [--limit N] [--repo MODE] [--format json|text|brief]
+akr-export --output <path> [--repo MODE]
+akr-import --input <path> [--repo MODE] [--strategy skip|update]
+akr-audit --id <uuid> [--repo MODE]
+akr-stats [--repo MODE]
 ```
+
+## Export & Import
+- Use `akr-export --output backup.json` to back up all artifacts to a JSON file before major changes.
+- Use `akr-import --input backup.json` to restore or merge knowledge from another repository.
+- Use `--strategy update` when importing to overwrite existing artifacts if the imported version is newer.
+
+## Audit Trail
+- Use `akr-audit --id <uuid>` to view the version history of an artifact when investigating changes or regressions.
+
+## Repository Stats
+- Use `akr-stats` to check the health of the knowledge repository — artifact count, DB size, tag distribution, and last update time.

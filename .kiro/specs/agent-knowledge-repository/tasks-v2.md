@@ -85,6 +85,6 @@ Incremental improvements to the Agent Knowledge Repository: lazy model loading, 
   - [x] 9.4 Write unit tests for stats (empty repo, repo with artifacts, tag distribution)
 
 - [-] 10. Final validation
-  - [x] 10.1 Run full test suite
+  - [ ] 10.1 Run full test suite
   - [ ] 10.2 Update README AND steering doc & hook with all new commands and options where appropriate
   - [ ] 10.3 Commit and push
