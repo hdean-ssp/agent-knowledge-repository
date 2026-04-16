@@ -6,7 +6,7 @@ A lightweight CLI tool and framework that gives AI agents a shared, persistent m
 
 ```bash
 # Clone and install
-git clone <repo-url> && cd agent-knowledge-repository
+git clone https://github.com/hdean-ssp/agent-knowledge-repository.git && cd agent-knowledge-repository
 pip install -e .
 
 # Verify it works
