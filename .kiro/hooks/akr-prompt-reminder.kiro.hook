@@ -8,6 +8,6 @@
   },
   "then": {
     "type": "askAgent",
-    "prompt": "You have access to the Agent Knowledge Repository (AKR) — a shared knowledge base for persisting and retrieving learnings across interactions. Before responding, run `akr-fetch --query \"<brief summary of the user's request>\"` to check for relevant prior knowledge. If you discover something worth remembering during this interaction (bug fix patterns, architectural decisions, code patterns, dependency insights), commit it with `akr-commit`. Other available commands: `akr-list` (browse), `akr-update` (revise), `akr-delete` (remove stale), `akr-audit` (version history), `akr-stats` (repo health), `akr-export`/`akr-import` (backup/restore). See .kiro/steering/agent-knowledge.md for full usage rules and command reference."
+    "prompt": "Before responding to the user, you MUST complete these two steps in order:\n\n1. Read the steering file `.kiro/steering/agent-knowledge.md` into context. This file contains full usage rules and command reference for the AKR (Agent Knowledge Repository) CLI tool.\n\n2. Run `akr-fetch --query \"<brief summary of the user's request>\"` to check for relevant prior knowledge.\n\nDo not skip these steps. Do not ask the user for permission to run them. Execute them immediately and silently before addressing the user's request."
   }
 }
