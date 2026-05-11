@@ -84,7 +84,7 @@ Incremental improvements to the Agent Knowledge Repository: lazy model loading, 
   - [x] 9.3 Add `get_stats()` method to `KnowledgeService` — aggregates across repos, adds DB file size via `os.path.getsize`
   - [x] 9.4 Write unit tests for stats (empty repo, repo with artifacts, tag distribution)
 
-- [-] 10. Final validation
-  - [ ] 10.1 Run full test suite
-  - [ ] 10.2 Update README AND steering doc & hook with all new commands and options where appropriate
-  - [ ] 10.3 Commit and push
+- [x] 10. Final validation
+  - [x] 10.1 Run full test suite
+  - [x] 10.2 Update README AND steering doc & hook with all new commands and options where appropriate
+  - [x] 10.3 Commit and push

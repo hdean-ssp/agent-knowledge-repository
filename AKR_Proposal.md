@@ -222,11 +222,11 @@ Vector search finds the most relevant results even if the wording is completely 
        │                   │                    │
        ▼                   ▼                    ▼
   ┌─────────────────────────────────────────────────┐
-  │              SQLite (WAL mode)                    │
-  │                                                  │
-  │  Reads: fully concurrent, never blocked          │
-  │  Writes: one at a time via file lock             │
-  │  No data corruption, no conflicts                │
+  │              SQLite (WAL mode)                  │
+  │                                                 │
+  │  Reads: fully concurrent, never blocked         │
+  │  Writes: one at a time via file lock            │
+  │  No data corruption, no conflicts               │
   └─────────────────────────────────────────────────┘
 ```
 
@@ -234,16 +234,16 @@ Vector search finds the most relevant results even if the wording is completely 
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│                                                         │
+│                                                        │
 │  "user" mode     Personal repo at ~/.kiro/knowledge/   │
-│                  Good for personal notes and WIP        │
-│                                                         │
+│                  Good for personal notes and WIP       │
+│                                                        │
 │  "shared" mode   Team repo at a shared path            │
-│                  Team decisions, patterns, fixes        │
-│                                                         │
+│                  Team decisions, patterns, fixes       │
+│                                                        │
 │  "both" mode     Searches both, merges results         │
-│                  Best of both worlds                    │
-│                                                         │
+│                  Best of both worlds                   │
+│                                                        │
 └────────────────────────────────────────────────────────┘
 ```
 
