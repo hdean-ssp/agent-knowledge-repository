@@ -57,24 +57,48 @@ bash $GENERO_TOOLS_PATH find-function-dependents <name>
 
 # Find functions never called by anything
 bash $GENERO_TOOLS_PATH find-dead-code
+
+# Find the full call chain from one function to another
+bash $GENERO_TOOLS_PATH find-call-chain <from_function> <to_function>
+
+# Find functions that call both of two given functions
+bash $GENERO_TOOLS_PATH find-common-callers <func1> <func2>
 ```
 
-### Schema impact analysis
+### Schema queries and impact analysis
 ```bash
+# Get full table definition with all columns
+bash $GENERO_TOOLS_PATH get-table <table_name>
+
+# Get a single column definition
+bash $GENERO_TOOLS_PATH get-column <table_name> <column_name>
+
+# Search tables by name pattern
+bash $GENERO_TOOLS_PATH search-tables "acc*"
+
+# Search columns by name across all tables
+bash $GENERO_TOOLS_PATH search-columns "cus_*"
+
+# Resolve a LIKE reference (table.column or table.*)
+bash $GENERO_TOOLS_PATH resolve-like "account.acc_code"
+
 # Which functions break if I change a table?
 bash $GENERO_TOOLS_PATH find-functions-using <table_name>
 
 # Which functions reference a specific column?
 bash $GENERO_TOOLS_PATH find-functions-using <table_name> <column_name>
-
-# Resolve a LIKE reference to its actual type
-bash $GENERO_TOOLS_PATH resolve-like <table.column>
 ```
 
 ### Module queries
 ```bash
-# Find a module by name
+# Find a module by exact name
 bash $GENERO_TOOLS_PATH find-module <name>
+
+# Search modules by name pattern
+bash $GENERO_TOOLS_PATH search-modules "core_*"
+
+# Find modules that use a specific file
+bash $GENERO_TOOLS_PATH list-file-modules <filename>
 
 # Find all functions in a module
 bash $GENERO_TOOLS_PATH find-functions-in-module <name>
@@ -82,8 +106,14 @@ bash $GENERO_TOOLS_PATH find-functions-in-module <name>
 # Find which module(s) contain a function
 bash $GENERO_TOOLS_PATH find-module-for-function <name>
 
-# Find module dependencies
+# Find functions in a module that call a specific function
+bash $GENERO_TOOLS_PATH find-functions-calling-in-module <module> <func>
+
+# Find modules that a module depends on
 bash $GENERO_TOOLS_PATH find-module-dependencies <name>
+
+# Find dependents within a module
+bash $GENERO_TOOLS_PATH find-dependents-in-module <module> <func>
 ```
 
 ### File references and authorship
@@ -91,32 +121,83 @@ bash $GENERO_TOOLS_PATH find-module-dependencies <name>
 # Find files related to a code reference (ticket, CR number)
 bash $GENERO_TOOLS_PATH find-reference "PRB-299"
 
+# Search references by pattern (partial match)
+bash $GENERO_TOOLS_PATH search-references "PRB"
+
+# Search references by prefix
+bash $GENERO_TOOLS_PATH search-reference-prefix "EH100512"
+
 # Find files modified by an author
 bash $GENERO_TOOLS_PATH find-author "Rich"
+
+# Get all references for a specific file
+bash $GENERO_TOOLS_PATH file-references "./src/utils.4gl"
+
+# Get all authors who modified a specific file
+bash $GENERO_TOOLS_PATH file-authors "./src/utils.4gl"
 
 # Show what areas an author has expertise in
 bash $GENERO_TOOLS_PATH author-expertise "Chilly"
 
-# Find recently modified files
-bash $GENERO_TOOLS_PATH recent-changes 30
+# Find recently modified files (default 30 days)
+bash $GENERO_TOOLS_PATH recent-changes 7
 ```
 
-### File dependencies
+### File dependencies (GLOBALS/IMPORT)
 ```bash
 # Show what a file depends on (GLOBALS/IMPORT)
 bash $GENERO_TOOLS_PATH file-deps <file_path>
 
-# Find files that depend on a globals file
+# Find files that depend on a globals file or import
 bash $GENERO_TOOLS_PATH file-dependents <name>
 ```
 
 ### Type resolution debugging
 ```bash
-# Find all unresolved LIKE references
+# Find all unresolved LIKE type references
 bash $GENERO_TOOLS_PATH unresolved-types
 
-# Validate type resolution consistency
+# Filter by error type (missing_table, missing_column, invalid_pattern)
+bash $GENERO_TOOLS_PATH unresolved-types --filter missing_table
+
+# Paginate results
+bash $GENERO_TOOLS_PATH unresolved-types --limit 10 --offset 5
+
+# Validate type resolution data consistency
 bash $GENERO_TOOLS_PATH validate-types
+```
+
+### Batch queries
+```bash
+# Execute multiple queries in a single batch from a JSON file
+bash $GENERO_TOOLS_PATH batch-query queries.json
+
+# Execute batch with output written to file
+bash $GENERO_TOOLS_PATH batch-query --input queries.json --output results.json
+```
+
+### Database management
+```bash
+# Create both databases from JSON files
+bash $GENERO_TOOLS_PATH create-dbs
+
+# Create workspace.db from workspace.json
+bash $GENERO_TOOLS_PATH create-signatures-db
+
+# Create modules.db from modules.json
+bash $GENERO_TOOLS_PATH create-modules-db
+```
+
+### Output format options (for editor integration)
+Append these to any function query:
+```bash
+--format=vim              # Concise single-line function signatures
+--format=vim-hover        # Multi-line format with file location and metrics
+--format=vim-completion   # Tab-separated format for completion
+
+--filter=functions-only   # Exclude procedures (no return type)
+--filter=no-metrics       # Remove complexity and LOC metrics
+--filter=no-file-info     # Remove file path and line number
 ```
 
 ## When to Use Which Tool
@@ -125,13 +206,22 @@ bash $GENERO_TOOLS_PATH validate-types
 |----------|------|---------|
 | What does this function do? (signature, params, returns) | genero-tools | `find-function` / `find-function-resolved` |
 | What calls this function? | genero-tools | `find-function-dependents` |
-| What will break if I change this table? | genero-tools | `find-functions-using` |
+| What does this function call? | genero-tools | `find-function-dependencies` |
+| How does function A reach function B? | genero-tools | `find-call-chain` |
+| What functions call both X and Y? | genero-tools | `find-common-callers` |
+| What will break if I change this table/column? | genero-tools | `find-functions-using` |
+| What type does this LIKE reference resolve to? | genero-tools | `resolve-like` |
+| What columns does a table have? | genero-tools | `get-table` / `get-column` |
+| Which module is this function in? | genero-tools | `find-module-for-function` |
+| What does this module depend on? | genero-tools | `find-module-dependencies` |
+| What GLOBALS/IMPORT does this file use? | genero-tools | `file-deps` |
+| Which files include this globals file? | genero-tools | `file-dependents` |
+| Who owns this code? | genero-tools | `file-authors` / `author-expertise` |
+| What ticket/CR relates to this file? | genero-tools | `find-reference` / `search-references` |
+| What changed recently? | genero-tools | `recent-changes` |
 | Has anyone fixed a similar bug before? | AKR | `akr-fetch --query "..."` |
 | Why was this designed this way? | AKR | `akr-fetch --query "..."` |
-| What's the complexity of this function? | genero-tools | `find-function` (metrics in output) |
 | What gotchas exist in this area? | AKR | `akr-fetch --query "..."` |
-| Who owns this code? | genero-tools | `file-authors` / `author-expertise` |
-| What's the module structure? | genero-tools | `find-module` / `find-functions-in-module` |
 | What patterns apply to this type of change? | AKR | `akr-fetch --query "..."` |
 
 ## Combined Patterns
