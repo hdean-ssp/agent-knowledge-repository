@@ -31,20 +31,19 @@ On RHEL 9 / CentOS / Fedora, `~/.bashrc` is the right file. On macOS or if you u
 
 ### Set up agent integration
 
-After installing, copy the steering file and hook into your target project's `.kiro/` directory:
+After installing, copy the steering files and hook into your target project's `.kiro/` directory:
 
 ```bash
-# From your target project root:
-mkdir -p .kiro/steering .kiro/hooks
-
-# Copy the steering file (auto-loaded into agent context)
-cp /path/to/agent-knowledge-repository/.kiro/steering/agent-knowledge.md .kiro/steering/
-
-# Copy the prompt hook (ensures the agent always knows about AKR)
-cp /path/to/agent-knowledge-repository/.kiro/hooks/akr-prompt-reminder.kiro.hook .kiro/hooks/
+# From the agent-knowledge-repository directory:
+mkdir -p /path/to/target-project/.kiro/steering /path/to/target-project/.kiro/hooks
+cp -r .kiro/steering .kiro/hooks /path/to/target-project/.kiro/
 ```
 
-The hook fires on every prompt submission, reminding the agent to `akr-fetch` before responding and `akr-commit` when it learns something. This is the most reliable way to ensure AKR is used — it works even when the steering file isn't auto-loaded by the IDE.
+This copies:
+- **Steering files** — `agent-knowledge.md` (AKR usage rules) and `codebase-intelligence.md` (genero-tools + AKR combined workflows), auto-loaded into agent context
+- **Prompt hook** — `akr-prompt-reminder.kiro.hook`, fires on every prompt submission to remind the agent to fetch knowledge and use structural queries before responding
+
+The hook is the most reliable mechanism — it works even in new sessions where steering files might not be auto-loaded by the IDE.
 
 ## Why AKR?
 
