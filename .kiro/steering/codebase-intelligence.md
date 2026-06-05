@@ -2,21 +2,23 @@
 inclusion: auto
 ---
 
-# Codebase Intelligence: genero-tools + AKR Integration
+# Codebase Intelligence: genero-tools + AKR + System Documentation
 
-You have access to two complementary intelligence systems for working in Genero/4GL codebases:
+You have access to three complementary intelligence systems for working in Genero/4GL codebases:
 
-- **genero-tools** — structural knowledge (what the code *is*): function signatures, call graphs, type resolution, schema impact, code metrics, module dependencies
-- **AKR** — experiential knowledge (what you've *learned*): bug patterns, architectural decisions, gotchas, code patterns discovered across sessions
+- **genero-tools** (Tier 1) — structural knowledge (what the code *is*): function signatures, call graphs, type resolution, schema impact, code metrics, module dependencies
+- **AKR** (Tier 2) — experiential knowledge (what you've *learned*): bug patterns, architectural decisions, gotchas, code patterns discovered across sessions
+- **System Documentation** (Tier 3) — business logic knowledge (what the system *does* and *why*): module purposes, data flows, integrations, batch processes, domain context
 
-Use both together. Structural queries are instant and deterministic. Experiential queries surface hard-won knowledge that would otherwise require re-discovery.
+Use all three together. Structural queries are instant and deterministic. Experiential queries surface hard-won knowledge that would otherwise require re-discovery. Documentation provides business-level understanding of what modules are supposed to do and how they relate. See `.kiro/steering/system-documentation.md` for the full documentation file reference.
 
-## Two-Tier Workflow
+## Three-Tier Workflow
 
 ### Before modifying code:
-1. **Structural** — use genero-tools to understand the function, its callers, callees, and types
-2. **Experiential** — use AKR to fetch known issues, patterns, or decisions related to that area
-3. Work with full context from both sources
+1. **Structural (genero-tools)** — understand the function, its callers, callees, and types
+2. **Experiential (AKR)** — fetch known issues, patterns, or decisions related to that area
+3. **Business context (System Documentation)** — read the relevant module summary or cross-cutting doc from `$ELECTRA_DOCUMENTATION/` to understand what the module is supposed to do, its data flows, and integration points. See `.kiro/steering/system-documentation.md` for the file lookup table.
+4. Work with full context from all three sources
 
 ### After completing work:
 1. **Commit learnings** — if you discovered something non-obvious, commit it to AKR
@@ -202,8 +204,8 @@ Append these to any function query:
 
 ## When to Use Which Tool
 
-| Question | Tool | Command |
-|----------|------|---------|
+| Question | Tool | Command/File |
+|----------|------|--------------|
 | What does this function do? (signature, params, returns) | genero-tools | `find-function` / `find-function-resolved` |
 | What calls this function? | genero-tools | `find-function-dependents` |
 | What does this function call? | genero-tools | `find-function-dependencies` |
@@ -223,6 +225,12 @@ Append these to any function query:
 | Why was this designed this way? | AKR | `akr-fetch --query "..."` |
 | What gotchas exist in this area? | AKR | `akr-fetch --query "..."` |
 | What patterns apply to this type of change? | AKR | `akr-fetch --query "..."` |
+| What does this module do from a business perspective? | System Docs | `$ELECTRA_DOCUMENTATION/01-module-summaries/<module>.md` |
+| How does data flow between modules? | System Docs | `$ELECTRA_DOCUMENTATION/02-data-flows.md` |
+| What external systems does this integrate with? | System Docs | `$ELECTRA_DOCUMENTATION/03-integration-catalogue.md` |
+| What batch/overnight processes exist? | System Docs | `$ELECTRA_DOCUMENTATION/04-process-inventory.md` |
+| What's the claims/quote/ARS business process? | System Docs | `$ELECTRA_DOCUMENTATION/03-level3/<relevant>.md` |
+| Is this area well-documented or a known gap? | System Docs | `$ELECTRA_DOCUMENTATION/06-gap-register.md` |
 
 ## Combined Patterns
 
@@ -236,6 +244,11 @@ bash $GENERO_TOOLS_PATH find-function-dependencies <name>
 
 # 2. Experiential: check for known issues
 akr-fetch --query "<function_name> issues patterns"
+
+# 3. Business context: understand the module's purpose
+# Read the relevant file from $ELECTRA_DOCUMENTATION/
+# (see .kiro/steering/system-documentation.md for which file to read)
+cat $ELECTRA_DOCUMENTATION/01-module-summaries/<module>.md
 ```
 
 ### Post-fix knowledge commit
