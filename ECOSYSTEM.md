@@ -1,41 +1,41 @@
 # Ecosystem: How AKR Connects
 
 ```
-                        ┌──────────────────────────────────┐
-                        │   electRa/Castle Codebase        │
-                        │       ~/work/genero              │
-                        └───────────────┬──────────────────┘
-                                        │ scanned by
-                                        ▼
-                        ┌──────────────────────────────────┐
-                        │         genero-tools             │
-                        │  workspace.db · modules.db       │
-                        └──────┬───────────────────┬───────┘
-                               │                   │
-               queried by      │                   │  databases read by
-                               ▼                   ▼
-               ┌───────────────────┐   ┌───────────────────────────────┐
-               │    genero-vim     │   │       electra-vault           │
-               │  Vim/Neovim IDE   │   │  Obsidian vault generator     │
-               │  plugin           │   │  (combines all 3 tiers)       │
-               └───────────────────┘   └──────┬──────────┬────────────┘
-                                              │          │
-                            reads via         │          │  reads docs from
-                            akr-export        │          │
-                                              ▼          ▼
-┌─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
-│                                                                           │
-│  ┌════════════════════════════════════════┐   ┌────────────────────────┐  │
-│  ║  agent-knowledge-repository (AKR)  ◄══╬═══╬═ electra-documentation  │  │
-│  ║  ★ THIS REPO ★                        ║   │  references AKR IDs    │  │
-│  ║                                        ║   │  (~35 pages)           │  │
-│  ║  • Persistent AI agent memory          ║   └────────────────────────┘  │
-│  ║  • ~165 semantic-searchable artifacts  ║                               │
-│  ║  • Steering files + hooks for agents   ║                               │
-│  ║  • Team-shared SQLite knowledge base   ║                               │
-│  ╚════════════════════════════════════════╝                               │
-│                                                                           │
-└─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+                        ┌─────────────────────────────────────┐
+                        │   electRa/Castle Codebase           │
+                        │       ~/work/genero                 │
+                        └─────────────────┬───────────────────┘
+                                          │ scanned by
+                                          ▼
+                        ┌─────────────────────────────────────┐
+                        │         genero-tools                │
+                        │  workspace.db · modules.db          │
+                        └──────┬──────────────────────┬───────┘
+                               │                      │
+               queried by      │                      │  databases read by
+                               ▼                      ▼
+               ┌───────────────────┐   ┌──────────────────────────────────┐
+               │    genero-vim     │   │       electra-vault              │
+               │  Vim/Neovim IDE   │   │  Obsidian vault generator        │
+               │  plugin           │   │  (combines all 3 tiers)          │
+               └───────────────────┘   └──────┬──────────────┬────────────┘
+                                              │              │
+                            reads via         │              │  reads docs from
+                            akr-export        │              │
+                                              ▼              ▼
+┌─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+│                                                                               │
+│  ┌════════════════════════════════════════════┐   ┌────────────────────────┐  │
+│  ║  agent-knowledge-repository (AKR)  ◄══════╬═══╬═ electra-documentation │  │
+│  ║  ★ THIS REPO ★                            ║   │  references AKR IDs    │  │
+│  ║                                            ║   │  (~35 pages)           │  │
+│  ║  • Persistent AI agent memory              ║   └────────────────────────┘  │
+│  ║  • ~165 semantic-searchable artifacts      ║                               │
+│  ║  • Steering files + hooks for agents       ║                               │
+│  ║  • Team-shared SQLite knowledge base       ║                               │
+│  ╚════════════════════════════════════════════╝                               │
+│                                                                               │
+└─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
                     ▲                   ▲
                     │                   │
           agents commit/fetch    steering files + hooks
